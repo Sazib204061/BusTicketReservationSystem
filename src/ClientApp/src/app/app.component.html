@@ -1,0 +1,28 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <nav class="navbar navbar-dark bg-primary mb-4">
+    <div class="container">
+      <span class="navbar-brand mb-0 h1">
+        🚌 {{ title }}
+      </span>
+      <div class="navbar-nav">
+        <button class="btn btn-outline-light" (click)="navigateTo('search')">
+          🔍 Search Buses
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <app-search *ngIf="currentView === 'search'"></app-search>
+    <app-seat-selection *ngIf="currentView === 'seats'"></app-seat-selection>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-light text-center py-3 mt-5">
+    <div class="container">
+      <p>&copy; 2024 Bus Ticket Reservation System. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
