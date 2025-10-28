@@ -50,6 +50,14 @@
       </div>
     </div>
 
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2">Searching for buses...</p>
+    </div>
+
     <!-- Search Results -->
     <div *ngIf="availableBuses.length > 0" class="card shadow-sm">
       <div class="card-header bg-success text-white">
@@ -106,11 +114,22 @@
       </div>
     </div>
 
-    <!-- No Results -->
-    <div *ngIf="availableBuses.length === 0 && !loading && from && to" class="text-center py-5">
+    <!-- No Results - Only show after search -->
+    <div *ngIf="searched && availableBuses.length === 0 && !loading" class="text-center py-5">
       <div class="text-muted">
         <h4>No buses found</h4>
         <p>Try adjusting your search criteria</p>
+        <button class="btn btn-outline-primary mt-2" (click)="searchBuses()">
+          Try Again
+        </button>
+      </div>
+    </div>
+
+    <!-- Initial State - Before any search -->
+    <div *ngIf="!searched && !loading" class="text-center py-5">
+      <div class="text-muted">
+        <h4>🔍 Find Your Bus</h4>
+        <p>Enter your journey details above to search for available buses</p>
       </div>
     </div>
   </div>

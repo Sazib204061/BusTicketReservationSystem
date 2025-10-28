@@ -15,6 +15,7 @@ export class SearchComponent {
   availableBuses: AvailableBus[] = [];
   loading: boolean = false;
   error: string = '';
+  searched: boolean = false;  // Add this flag
 
   cities: string[] = [
     'Dhaka', 'Chittagong', 'Rajshahi', 'Khulna', 'Sylhet',
@@ -42,6 +43,7 @@ export class SearchComponent {
     this.loading = true;
     this.error = '';
     this.availableBuses = [];
+    this.searched = true;  // Set flag to true when search is performed
 
     const journeyDate = new Date(this.journeyDate);
 
