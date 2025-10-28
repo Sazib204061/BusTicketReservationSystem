@@ -29,7 +29,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Seed data on startup
+// Seed data 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;

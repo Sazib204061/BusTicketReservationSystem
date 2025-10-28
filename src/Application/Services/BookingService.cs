@@ -94,7 +94,7 @@ namespace Application.Services
                         Message = "Seat not found"
                     };
 
-                var existingTicket = await _context.Tickets
+                var existingTicket = await _context.Tickets    //check is this ticket is already booked?
                     .FirstOrDefaultAsync(t => t.BusScheduleId == input.BusScheduleId &&
                                             t.SeatId == input.SeatId &&
                                             t.Status != TicketStatus.Cancelled);
@@ -128,7 +128,7 @@ namespace Application.Services
                     schedule.Route.BasePrice
                 );
 
-                seat.Book();
+                seat.Book();  //just change seat status to booked
 
                 await _context.Tickets.AddAsync(ticket);
                 await _context.SaveChangesAsync();
