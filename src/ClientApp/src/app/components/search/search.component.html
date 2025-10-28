@@ -1,0 +1,136 @@
+<div class="row">
+  <div class="col-12">
+    <!-- Search Form -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">🔍 Search Buses</h5>
+      </div>
+      <div class="card-body">
+        <form (ngSubmit)="searchBuses()">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+              <label class="form-label">From</label>
+              <select class="form-select" [(ngModel)]="from" name="from" required>
+                <option value="">Select city</option>
+                <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+              </select>
+            </div>
+
+            <div class="col-md-1 text-center">
+              <button type="button" class="btn btn-outline-secondary" (click)="swapCities()" title="Swap cities">
+                ⇄
+              </button>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">To</label>
+              <select class="form-select" [(ngModel)]="to" name="to" required>
+                <option value="">Select city</option>
+                <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Journey Date</label>
+              <input type="date" class="form-control" [(ngModel)]="journeyDate" name="journeyDate" required>
+            </div>
+
+            <div class="col-md-2">
+              <button type="submit" class="btn btn-primary w-100" [disabled]="loading">
+                {{ loading ? 'Searching...' : 'Search Buses' }}
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <!-- Error Message -->
+        <div *ngIf="error" class="alert alert-danger mt-3 mb-0">
+          {{ error }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2">Searching for buses...</p>
+    </div>
+
+    <!-- Search Results -->
+    <div *ngIf="availableBuses.length > 0" class="card shadow-sm">
+      <div class="card-header bg-success text-white">
+        <h5 class="mb-0">
+          🚌 Available Buses ({{ availableBuses.length }} found)
+          <small class="float-end">{{ from }} → {{ to }} on {{ journeyDate | date:'fullDate' }}</small>
+        </h5>
+      </div>
+      <div class="card-body p-0">
+        <div class="list-group list-group-flush">
+          <div *ngFor="let bus of availableBuses" class="list-group-item">
+            <div class="row align-items-center">
+              <div class="col-md-3">
+                <h6 class="mb-1">{{ bus.companyName }}</h6>
+                <small class="text-muted">
+                  {{ bus.busName }} • {{ bus.busNumber }}
+                  <span class="badge" [ngClass]="bus.hasAC ? 'bg-info' : 'bg-secondary'">
+                    {{ bus.hasAC ? 'AC' : 'NON AC' }}
+                  </span>
+                </small>
+              </div>
+
+              <div class="col-md-2">
+                <strong>{{ bus.startTime | date:'shortTime' }}</strong>
+                <br>
+                <small class="text-muted">Departure</small>
+              </div>
+
+              <div class="col-md-2">
+                <strong>{{ bus.arrivalTime | date:'shortTime' }}</strong>
+                <br>
+                <small class="text-muted">Arrival</small>
+              </div>
+
+              <div class="col-md-2">
+                <span class="badge bg-success fs-6">{{ bus.seatsLeft }} Seats</span>
+                <br>
+                <small class="text-muted">Available</small>
+              </div>
+
+              <div class="col-md-2">
+                <h5 class="text-primary mb-0">৳{{ bus.price }}</h5>
+                <small class="text-muted">Fare</small>
+              </div>
+
+              <div class="col-md-1">
+                <button class="btn btn-primary btn-sm" (click)="viewSeats(bus.busScheduleId)">
+                  View Seats
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Results - Only show after search -->
+    <div *ngIf="searched && availableBuses.length === 0 && !loading" class="text-center py-5">
+      <div class="text-muted">
+        <h4>No buses found</h4>
+        <p>Try adjusting your search criteria</p>
+        <button class="btn btn-outline-primary mt-2" (click)="searchBuses()">
+          Try Again
+        </button>
+      </div>
+    </div>
+
+    <!-- Initial State - Before any search -->
+    <div *ngIf="!searched && !loading" class="text-center py-5">
+      <div class="text-muted">
+        <h4>🔍 Find Your Bus</h4>
+        <p>Enter your journey details above to search for available buses</p>
+      </div>
+    </div>
+  </div>
+</div>

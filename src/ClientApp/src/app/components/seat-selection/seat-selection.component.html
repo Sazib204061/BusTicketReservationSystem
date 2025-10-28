@@ -1,0 +1,168 @@
+<div class="row" *ngIf="seatPlan; else loadingTemplate">
+  <!-- Bus Information -->
+  <div class="col-12 mb-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <button class="btn btn-outline-secondary mb-3" (click)="goBack()">← Back to Search</button>
+
+        <h4 class="text-primary">{{ seatPlan.companyName }} - {{ seatPlan.busName }}</h4>
+        <p class="text-muted mb-0">Select your preferred seat and provide passenger details</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-8">
+    <!-- Seat Layout -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-info text-white">
+        <h5 class="mb-0">Seat Layout</h5>
+      </div>
+      <div class="card-body">
+        <!-- Seat Legend -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="seat-legend d-flex gap-3 flex-wrap">
+              <div class="d-flex align-items-center">
+                <div class="seat-example seat-available me-2"></div>
+                <small>Available</small>
+              </div>
+              <!--<div class="d-flex align-items-center">
+                <div class="seat-example seat-booked me-2"></div>
+                <small>Booked</small>
+              </div>-->
+              <div class="d-flex align-items-center">
+                <div class="seat-example seat-sold me-2"></div>
+                <small>Sold</small>
+              </div>
+              <div class="d-flex align-items-center">
+                <div class="seat-example seat-selected me-2"></div>
+                <small>Selected</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Seat Grid -->
+        <div class="seat-layout">
+          <div class="bus-driver text-center mb-4">
+            <div class="driver-cabin"></div>
+            <small class="text-muted">Driver</small>
+          </div>
+
+          <div class="seat-grid">
+            <div *ngFor="let seat of seatPlan.seats"
+                 class="seat"
+                 [ngClass]="getSeatClass(seat)"
+                 (click)="selectSeat(seat)"
+                 [title]="'Seat ' + seat.seatNumber">
+              {{ seat.seatNumber }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Selected Seat Info -->
+        <div *ngIf="selectedSeat" class="alert alert-info mt-4">
+          <strong>Selected Seat:</strong> {{ selectedSeat.seatNumber }}
+          <button class="btn btn-sm btn-outline-secondary float-end" (click)="resetSelection()">
+            Change Seat
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <!-- Booking Form -->
+    <div class="card shadow-sm sticky-top" style="top: 20px;">
+      <div class="card-header bg-warning text-dark">
+        <h5 class="mb-0">Passenger Details</h5>
+      </div>
+      <div class="card-body">
+        <form (ngSubmit)="bookSeat()">
+          <!-- Passenger Info -->
+          <div class="mb-3">
+            <label class="form-label">Passenger Name *</label>
+            <input type="text" class="form-control" [(ngModel)]="passengerName" name="passengerName" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Mobile Number *</label>
+            <input type="tel" class="form-control" [(ngModel)]="mobileNumber" name="mobileNumber" required>
+          </div>
+
+          <!-- Boarding Point -->
+          <div class="mb-3">
+            <label class="form-label">Boarding Point *</label>
+            <select class="form-select" [(ngModel)]="boardingPoint" name="boardingPoint" required>
+              <option value="">Select boarding point</option>
+              <option *ngFor="let point of seatPlan.boardingPoints" [value]="point">
+                {{ point }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Dropping Point -->
+          <div class="mb-3">
+            <label class="form-label">Dropping Point *</label>
+            <select class="form-select" [(ngModel)]="droppingPoint" name="droppingPoint" required>
+              <option value="">Select dropping point</option>
+              <option *ngFor="let point of seatPlan.droppingPoints" [value]="point">
+                {{ point }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Fare Summary -->
+          <div *ngIf="selectedSeat" class="fare-summary mb-3 p-3 bg-light rounded">
+            <h6>Fare Summary</h6>
+            <div class="d-flex justify-content-between">
+              <span>Base Fare:</span>
+              <span>৳650</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span>Service Charge:</span>
+              <span>৳20</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span>PGW Charge:</span>
+              <span>৳8</span>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between fw-bold">
+              <span>Total:</span>
+              <span class="text-primary">৳678</span>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit"
+                  class="btn btn-success w-100"
+                  [disabled]="loading || !selectedSeat">
+            {{ loading ? 'Booking...' : 'Confirm Booking' }}
+          </button>
+        </form>
+
+        <!-- Error Message -->
+        <div *ngIf="error" class="alert alert-danger mt-3 mb-0">
+          {{ error }}
+        </div>
+
+        <!-- Success Message -->
+        <div *ngIf="successMessage" class="alert alert-success mt-3 mb-0">
+          {{ successMessage }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="text-center py-5">
+    <div *ngIf="loading" class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div *ngIf="error" class="alert alert-danger mt-3">
+      {{ error }}
+    </div>
+  </div>
+</ng-template>

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     public class Passenger
     {
@@ -12,7 +9,7 @@ namespace Domain.Entities
 
         public virtual ICollection<Ticket> Tickets { get; private set; }
 
-        public Passenger(string name, string mobileNumber, string email = null)
+        public Passenger(string name, string mobileNumber, string email = "example@gmail.com")
         {
             Id = Guid.NewGuid();
             Name = name;
